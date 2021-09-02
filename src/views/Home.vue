@@ -64,7 +64,7 @@
                                 formatted-number(:value="cryptoAsset.price * cryptoAsset.amount" :protected="protected")
                             td.text-end
                                 formatted-number(:value="cryptoAsset.price * cryptoAsset.amount / current * 100")
-    .card
+    .card(v-if="cryptoAssets.length")
         .card-body
             canvas#chart
 </template>
@@ -431,6 +431,12 @@ export default {
 
     &:last-child {
         margin-bottom: 1.5rem;
+    }
+}
+
+.table {
+    th {
+        white-space: nowrap !important;
     }
 }
 
