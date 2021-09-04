@@ -182,9 +182,12 @@ export default {
         profit() {
             this.updateTitle()
         },
+        protected() {
+            this.updateTitle()
+        },
         unprotectedProfit() {
             this.updateTitle()
-        }
+        },
     },
     mounted() {
         this.init()
