@@ -101,7 +101,8 @@ import {
     Tooltip,
     SubTitle,
 } from 'chart.js'
-import {markRaw} from 'vue'
+import {markRaw, ref} from 'vue'
+import {useHead} from '@vueuse/head'
 
 Chart.register(
     ArcElement,
@@ -136,6 +137,11 @@ const CRYPTO_ASSETS_STORAGE_KEY = 'crypto_assets'
 export default {
     name: 'Home',
     components: {CryptoAssetForm, CryptoAssetPrice, FormattedNumber, FormattedNumberInput},
+    setup() {
+        const title = ref('Crypto Holder')
+        useHead({title})
+        return {title}
+    },
     data() {
         return {
             createEnabled: false,
@@ -173,11 +179,22 @@ export default {
         initial() {
             this.storeData()
         },
+        profit() {
+            this.updateTitle()
+        },
+        unprotectedProfit() {
+            this.updateTitle()
+        }
     },
     mounted() {
         this.init()
     },
     methods: {
+        updateTitle() {
+            this.title = !this.protected || this.unprotectedProfit ?
+                this.profit.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' | Crypto Holder'
+                : 'Crypto Holder'
+        },
         init() {
             this.restoreProtected()
             this.restoreData()
