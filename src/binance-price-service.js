@@ -6,18 +6,22 @@ export class BinancePriceService {
     }
 
     getPriceBySymbol(symbol, doneCallback = null, errorCallback = null) {
+        const done = (response, pair) => doneCallback && doneCallback(parseFloat(response.data.c), 'https://www.binance.com/en/trade/' + symbol + '_' + pair)
         if (symbol in this.cachePaired) {
+            const pair = this.cachePaired[symbol]
             this.getProductByPairedSymbol(
-                symbol + this.cachePaired[symbol],
-                response => doneCallback && doneCallback(parseFloat(response.data.c)),
+                symbol + pair,
+                response => done(response, pair),
                 errorCallback,
             )
         }
         else {
             const pairs = ['USDT', 'BUSD']
             const sync = (index = 0) => {
+                const pair = pairs[index]
+                const pairedSymbol = symbol + pair
                 const next = response => {
-                    console.log('Failed: ' + symbol + pairs[index])
+                    console.log('Failed: ' + pairedSymbol)
                     console.log(response)
                     const nextIndex = index + 1
                     if (nextIndex < pairs.length) {
@@ -28,11 +32,11 @@ export class BinancePriceService {
                     }
                 }
                 this.getProductByPairedSymbol(
-                    symbol + pairs[index],
+                    pairedSymbol,
                     response => {
                         if (response.data) {
                             this.cachePaired[symbol] = pairs[index]
-                            doneCallback && doneCallback(parseFloat(response.data.c))
+                            done(response, pair)
                         }
                         else {
                             next(response)

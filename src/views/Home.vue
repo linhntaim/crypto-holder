@@ -55,7 +55,10 @@
                                     i.fas.fa-arrow-up
                                 button.btn.btn-sm(:disabled="index === cryptoAssets.length - 1" @click="onCryptoAssetMoveDown(cryptoAsset, index)")
                                     i.fas.fa-arrow-down
-                            th {{ cryptoAsset.symbol }}
+                            th
+                                a.btn.btn-link.btn-sm(:class="{disabled: !cryptoAsset.priceUrl}" :href="cryptoAsset.priceUrl" target="_blank")
+                                    i.fas.fa-chart-area
+                                | {{ cryptoAsset.symbol }}
                             td.text-end
                                 crypto-asset-price(:cryptoAsset="cryptoAsset" @updated="onCryptoAssetPriceUpdated(cryptoAsset, index, $event)")
                             td.text-end
@@ -332,6 +335,7 @@ export default {
                 symbol: symbol,
                 price: 0,
                 amount: amount,
+                priceUrl: null,
             })
         },
         onCryptoAssetFormSubmit($event) {
@@ -427,6 +431,7 @@ export default {
         },
         onCryptoAssetPriceUpdated(cryptoAsset, index, $event) {
             cryptoAsset.price = $event.price
+            cryptoAsset.priceUrl = $event.priceUrl
             this.$forceUpdate()
             this.onCryptoAssetsUpdate(++this.chartInitialized === this.cryptoAssets.length)
         },

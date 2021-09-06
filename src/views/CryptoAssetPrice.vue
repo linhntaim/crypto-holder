@@ -29,9 +29,9 @@ export default {
         syncPriceWithBinance(callback = null) {
             binancePriceService.getPriceBySymbol(
                 this.cryptoAsset.symbol,
-                price => {
+                (price, priceUrl) => {
                     this.loading = false
-                    this.$emit('updated', {price: price})
+                    this.$emit('updated', {price, priceUrl})
                     callback && callback()
                 },
                 response => {
