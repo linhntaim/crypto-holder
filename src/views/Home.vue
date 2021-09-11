@@ -354,16 +354,18 @@ export default {
                 window.navigator.msSaveOrOpenBlob(file, filename)
             }
             else { // Others
-                const a = document.createElement('a'),
-                    url = URL.createObjectURL(file)
-                a.href = url
-                a.download = filename
-                document.body.appendChild(a)
-                a.click()
-                setTimeout(function () {
-                    document.body.removeChild(a)
-                    window.URL.revokeObjectURL(url)
-                }, 0)
+                const reader = new FileReader()
+                reader.onloadend = function () {
+                    const a = document.createElement('a')
+                    a.href = reader.result.toString()
+                    a.download = filename
+                    document.body.appendChild(a)
+                    a.click()
+                    setTimeout(function () {
+                        document.body.removeChild(a)
+                    }, 0)
+                }
+                reader.readAsDataURL(file)
             }
         },
         onImportClicked() {
